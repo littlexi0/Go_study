@@ -1,0 +1,21 @@
+// package main
+
+// import (
+// 	"net/http"
+
+// 	"github.com/gin-gonic/gin"
+// )
+
+// func Hello(c *gin.Context) {
+// 	c.String(200, "hello %s", "world")
+// 	c.JSON(http.StatusOK, gin.H{ //以json格式输出
+// 		"name": "tom",
+// 		"age":  "20",
+// 	}) //200代表请求成功,http.StatusOK代表请求成功,gin.H是map的一个快捷方式
+// }
+
+// func main() {
+// 	e := gin.Default() //创建一个默认的路由引擎
+// 	e.GET("/hello", Hello)
+// 	e.Run()
+// }
