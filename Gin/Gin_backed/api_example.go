@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,20 @@ func welcome(c *gin.Context) {
 	c.JSON(200, gin.H{
 		firstname: "tom",
 		lastname:  "jerry",
+	})
+}
+
+func form_post(c *gin.Context) {
+	message := c.PostForm("message")
+	nick := c.DefaultPostForm("nick", "anonymous")
+	aa := c.PostForm("aa")
+	c.String(http.StatusOK, "message:%s,nick:%s", message, nick)
+	fmt.Println(nick)
+	c.JSON(200, gin.H{
+		"status":  "posted",
+		"message": message,
+		"nick":    nick,
+		"aa":      aa,
 	})
 }
 
@@ -57,6 +72,17 @@ func main() {
 		c.String(http.StatusOK, "The available groups are [...]")
 	})
 
+	// router.POST("/form_post", form_post)
+	router.POST("/form_post/", func(c *gin.Context) {
+		message := c.PostForm("message")
+		nick := c.DefaultPostForm("nick", "anonymous")
+
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "posted",
+			"message": message,
+			"nick":    nick,
+		})
+	})
 	router.GET("/welcome", welcome)
 
 	router.Run(":8080")
