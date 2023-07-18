@@ -1,18 +1,22 @@
-import Vue from 'vue'
-import App from './App.vue'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import Vue from 'vue';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import Vuelidate from 'vuelidate';
 
-//scss style
-import './assets/scss/index.scss'
-
-Vue.config.productionTip = false
+import App from './App.vue';
+import router from './router';
 
 
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
+// scss style
+import './assets/css/index.css';
 
+Vue.config.productionTip = false;
 
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
+Vue.use(Vuelidate);
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  router,
+  // store,
+  render: (h) => h(App),
+}).$mount('#app');
