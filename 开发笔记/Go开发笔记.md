@@ -46,6 +46,55 @@ func main() {
 
 *感觉是能最快速启动的后端了*
 
+## 链接数据库
+
+安装gorm`go get -u gorm.io/gorm`
+
+定义表结构体
+
+```go
+type User struct {
+	gorm.Model
+	Name      string `gorm:"type:varchar(20);not null"`
+	Telephone string `gorm:"type:varchar(11);not null;unique"`
+	Password  string `gorm:"size:255;not null"`
+}
+```
+
+安装mysql`go get gorm.io/driver/mysql@latest`
+
+导入包：`import "gorm.io/driver/mysql"`
+
+在GORM v2 版本中，`*gorm.DB` 类型的对象没有 `Close()` 方法。因此，您不需要显式地关闭数据库连接。
+
+## 数据库操作
+
+`db.AutoMigrate(&User{})`创建table，其中User是之前定义的结构体
+
+`db.Create(&newUser)`向数据库插入数据
+
+
+
+
+
+## 分发TOKEN
+
+安装jwt包：`go get github.com/dgrijalva/jwt-go`
+
+## 引入config组件
+
+安装viper`go get github.com/spf13/viper`
+
+## 安装node-sass
+
+node14对应的版本
+
+`npm install node-sass@4.14.1`
+
+
+
+
+
 
 
 
