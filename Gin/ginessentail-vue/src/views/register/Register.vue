@@ -9,7 +9,7 @@
               <b-form-input
                 v-model="user.name"
                 type="text"
-                placeholder="请输入您的名称"
+                placeholder="请输入您的名称(选填)"
                 required
               ></b-form-input>
             </b-form-group>
@@ -22,7 +22,7 @@
                 :state="validateState('telephone')"
               ></b-form-input>
               <b-form-invalid-feedback :state="validateState('telephone')"
-                >手机号必须为11位</b-form-invalid-feedback
+                >手机号不合法</b-form-invalid-feedback
               >
             </b-form-group>
             <br />
@@ -56,6 +56,8 @@
 <script>
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import customValidator from "@/helper/validator";
+import storageService from "@/service/storageService";
+import userService from "@/service/userService";
 
 export default {
   data() {
@@ -70,7 +72,6 @@ export default {
   validations: {
     user: {
       name: {
-        required,
         maxLength: maxLength(30),
       },
       telephone: {
@@ -89,21 +90,37 @@ export default {
       return $dirty ? !$error : null;
     },
     register() {
-      console.log(this.user);
-      //   this.$axios
-      //     .post("/user/register", {
-      //       name: this.user.name,
-      //       telephone: this.user.telephone,
-      //       password: this.user.password,
-      //     })
-      //     .then((res) => {
-      //       console.log(res);
-      //       if (res.data.code === 200) {
-      //         this.$router.replace({ name: "login" });
-      //       } else {
-      //         this.$message.error(res.data.message);
-      //       }
-      //     });
+      this.$v.user.$touch();
+      if (this.$v.user.$anyError) {
+        return;
+      }
+      userService
+        .register(this.user)
+        .then((res) => {
+          //保存token
+          console.log(res.data.data.token);
+          storageService.set(storageService.USER_TOKEN, res.data.data.token);
+          // this.$router.replace({ name: "register" });
+
+          userService.info().then((res) => {
+            //保存用户信息
+            // console.log(res.data.data.user);
+            storageService.set(
+              storageService.USER_INFO,
+              JSON.stringify(res.data.data.user)
+            );
+            //跳转主页
+            this.$router.replace({ name: "Home" });
+          });
+        })
+        .catch((err) => {
+          console.log("err:", err.response.data.msg);
+          this.$bvToast.toast("数据验证错误", {
+            title: err.response.data.msg,
+            variant: "danger",
+            solid: true,
+          });
+        });
     },
   },
 };

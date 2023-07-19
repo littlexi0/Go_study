@@ -16,9 +16,16 @@ import (
 
 func Register(ctx *gin.Context) {
 	DB := common.GetDB()
-	name := ctx.PostForm("name")
-	telephone := ctx.PostForm("telephone")
-	password := ctx.PostForm("password")
+	//使用map获取参数
+	// var requestMap = make(map[string]string)
+	// json.NewDecoder(ctx.Request.Body).Decode(&requestMap)
+
+	var requestUser = model.User{}
+	ctx.Bind(&requestUser)
+
+	name := requestUser.Name
+	telephone := requestUser.Telephone
+	password := requestUser.Password
 
 	//手机号验证
 	if len(telephone) != 11 {
@@ -53,9 +60,17 @@ func Register(ctx *gin.Context) {
 		Password:  string(hashedPassword),
 	}
 	DB.Create(&newUser)
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "好哒",
-	})
+
+	//发放token
+	token, err := common.ReleaseToken(newUser)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, 500, nil, "系统异常")
+		log.Printf("token generate error: %v", err)
+		return
+	}
+
+	//返回结果
+	response.Success(ctx, gin.H{"token": token}, "注册成功")
 }
 
 func Login(ctx *gin.Context) {
