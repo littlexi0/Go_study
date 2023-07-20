@@ -43,19 +43,15 @@
 
 <script>
 import storageService from "@/service/storageService";
+// import { mapState, mapActions } from "vuex";
+
 export default {
-  computed: {
-    userInfo() {
-      return JSON.parse(storageService.get(storageService.USER_INFO));
-    },
+  userInfo() {
+    return JSON.parse(storageService.get(storageService.USER_INFO));
   },
-  data() {
-    return {};
-  },
-  methods: {},
 };
 </script>
 
-<style>
+<style scoped>
 </style>
 

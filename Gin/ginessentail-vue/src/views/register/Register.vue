@@ -56,9 +56,9 @@
 <script>
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import customValidator from "@/helper/validator";
-import storageService from "@/service/storageService";
+import { mapActions } from "vuex";
 import userService from "@/service/userService";
-
+import storageService from "@/service/storageService";
 export default {
   data() {
     return {
@@ -85,6 +85,8 @@ export default {
     },
   },
   methods: {
+    // ...mapMutations("userModule", ["SET_TOKEN", "SET_USER_INFO"]),
+    ...mapActions("userModule", { userRegister: "register" }),
     validateState(name) {
       const { $dirty, $error } = this.$v.user[name];
       return $dirty ? !$error : null;
