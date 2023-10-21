@@ -11,7 +11,7 @@ import (
 
 var DB *gorm.DB
 
-func InitDB() *gorm.DB {
+func InitDB() {
 	// driverName := "mysql"
 	host := viper.GetString("datasource.host")
 	port := viper.GetString("datasource.port")
@@ -26,14 +26,14 @@ func InitDB() *gorm.DB {
 		port,
 		database,
 		charset)
-	db, err := gorm.Open(mysql.Open(args), &gorm.Config{})
+
+	var err error
+	DB, err = gorm.Open(mysql.Open(args), &gorm.Config{})
 	// db, err := gorm.Open(driverName, args)
 	if err != nil {
 		panic("failed to connect database,err: " + err.Error())
 	}
-	db.AutoMigrate(&model.User{})
-	DB = db
-	return db
+	DB.AutoMigrate(&model.User{})
 }
 
 func GetDB() *gorm.DB {
